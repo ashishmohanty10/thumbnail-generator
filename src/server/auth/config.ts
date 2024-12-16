@@ -1,8 +1,12 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 
 import { db } from "~/server/db";
+import Credential from "next-auth/providers/credentials";
+import { signInSchema } from "~/zod-schemas/zodSchema";
+import bcrypt from "bcryptjs";
+import { ZodError } from "zod";
+import { env } from "~/env";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -25,14 +29,53 @@ declare module "next-auth" {
   // }
 }
 
+declare module "next-auth" {
+  interface JWT {
+    id: string;
+  }
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
  * @see https://next-auth.js.org/configuration/options
  */
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
   providers: [
-    DiscordProvider,
+    Credential({
+      credentials: {
+        email: {},
+        password: {},
+      },
+      async authorize(credentials) {
+        try {
+          const { email, password } =
+            await signInSchema.parseAsync(credentials);
+
+          const user = await db.user.findUnique({
+            where: { email },
+          });
+
+          if (!user) {
+            throw new Error("User not found");
+          }
+
+          const isValid = await bcrypt.compare(password, user.password);
+
+          if (!isValid) {
+            return null;
+          }
+
+          return user;
+        } catch (error) {
+          if (error instanceof ZodError) {
+            return null;
+          }
+          return null;
+        }
+      },
+    }),
+
     /**
      * ...add more providers here.
      *
@@ -43,14 +86,27 @@ export const authConfig = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    signIn: "/signin",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: env.AUTH_SECRET,
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+
+    session({ session, token }) {
+      if (token && typeof token.id === "string") {
+        session.user.id = token.id;
+      }
+      return session;
+    },
   },
 } satisfies NextAuthConfig;
