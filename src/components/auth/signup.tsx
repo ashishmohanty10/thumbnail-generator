@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { ChevronLeft } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { signInSchema, type signInSchemaType } from "~/zod-schemas/zodSchema";
+import { signUpSchema, type signUpSchemaType } from "~/zod-schemas/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -22,33 +22,34 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { signupAction } from "~/app/actions/authActions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function SigninForm() {
+export function SignupForm() {
   const router = useRouter();
-  const form = useForm<signInSchemaType>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<signUpSchemaType>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: signInSchemaType) {
-    const response = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      callbackUrl: "/dashboard",
-      redirect: false,
-    });
+  async function onSubmit(values: signUpSchemaType) {
+    try {
+      console.log(values);
+      const error = await signupAction(values);
 
-    if (response?.error) {
-      toast.error("Sign-in error:");
-    } else {
-      router.push("/dashboard");
-      toast.success("Sign-in successful:");
+      if (error) {
+        toast.error("Sign-up error:");
+      } else {
+        router.push("/dashboard");
+        toast.success("Sign-up successful: Sign in with you new account!!");
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -58,15 +59,15 @@ export function SigninForm() {
         <Button asChild className="w-fit self-end">
           <Link href="/">
             <ChevronLeft />
-            <span>Go Back</span>
+            Go back
           </Link>
         </Button>
 
         <Card className="max-w-sm">
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+            <CardTitle>Sign up </CardTitle>
             <CardDescription>
-              Enter your email and password below to sign in
+              Register yourself, by entering name , email and password
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -77,12 +78,34 @@ export function SigninForm() {
               >
                 <FormField
                   control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your name..."
+                          {...field}
+                          type="text"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="Email..." {...field} type="email" />
+                        <Input
+                          placeholder="Enter your email..."
+                          {...field}
+                          type="email"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -97,7 +120,7 @@ export function SigninForm() {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Password..."
+                          placeholder="Enter your password..."
                           {...field}
                           type="password"
                         />
@@ -107,15 +130,15 @@ export function SigninForm() {
                   )}
                 />
 
-                <Button type="submit" className="w-full">
+                <Button className="w-full" type="submit">
                   Submit
                 </Button>
 
                 <Link
-                  href="/signup"
+                  href="/signin"
                   className="flex items-center justify-center text-sm hover:underline"
                 >
-                  Don&apos;t have an account?
+                  Already have an account?
                 </Link>
               </form>
             </Form>

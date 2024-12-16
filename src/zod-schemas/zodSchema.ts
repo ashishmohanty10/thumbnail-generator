@@ -13,4 +13,23 @@ export const signInSchema = z.object({
     .max(32, "Password must be at most 32 character"),
 });
 
+export const signUpSchema = z.object({
+  name: z
+    .string({ required_error: "Username is required" })
+    .min(1, "Username is required"),
+
+  email: z
+    .string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email("Invalid Email"),
+
+  password: z
+    .string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+    .min(8, "Password need to be atleasr 8 character")
+    .max(32, "Password must be at most 32 character"),
+});
+
 export type signInSchemaType = z.infer<typeof signInSchema>;
+
+export type signUpSchemaType = z.infer<typeof signUpSchema>;

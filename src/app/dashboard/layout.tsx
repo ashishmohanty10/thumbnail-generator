@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { Toaster } from "sonner";
+import { Navbar } from "~/components/dashboard/navbar";
 
 export const metadata: Metadata = {
   title: "Thumbnail Generator",
@@ -10,16 +10,15 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.className}`}>
-      <body>
+    <div lang="en" className={`${GeistSans.className}`}>
+      <div>
+        <Navbar />
         {children}
-
-        <Toaster richColors />
-      </body>
-    </html>
+      </div>
+    </div>
   );
 }

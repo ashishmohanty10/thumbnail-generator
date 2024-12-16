@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { Signin } from "~/components/auth/signin";
+import { SigninForm } from "~/components/auth/signin";
 import { auth } from "~/server/auth";
 
 export default async function SigninPage() {
@@ -13,7 +13,7 @@ export default async function SigninPage() {
 
   return (
     <div>
-      <Signin />
+      <SigninForm />
     </div>
   );
 }

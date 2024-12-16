@@ -7,6 +7,7 @@ import { signInSchema } from "~/zod-schemas/zodSchema";
 import bcrypt from "bcryptjs";
 import { ZodError } from "zod";
 import { env } from "~/env";
+import Google from "next-auth/providers/google";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -74,6 +75,10 @@ export const authConfig: NextAuthConfig = {
           return null;
         }
       },
+    }),
+    Google({
+      // clientId:lskdfjsldfkj,
+      // clientSecret:
     }),
 
     /**
