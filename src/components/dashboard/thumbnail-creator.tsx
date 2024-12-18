@@ -10,6 +10,8 @@ export function ThumbnailCreator() {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
+  const [text, setText] = useState("POV");
+
   const [processedImgUrl, setProcessedImageUrl] = useState<string | null>(null);
 
   const [canvasReady, setCanvasReady] = useState(false);
@@ -49,16 +51,50 @@ export function ThumbnailCreator() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const image = new Image();
+    const bgImage = new Image();
 
-    image.onload = () => {
-      canvas.width = image.width;
-      canvas.height = image.height;
+    bgImage.onload = () => {
+      canvas.width = bgImage.width;
+      canvas.height = bgImage.height;
 
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      let fontSize = 2000;
+      let selectFont = "Arial";
+
+      ctx.font = `${"bold"} ${fontSize}px ${selectFont}`;
+
+      const textWidth = ctx.measureText(text).width;
+      const targetWidth = canvas.width * 0.9;
+
+      fontSize == targetWidth / textWidth;
+      ctx.font = `${"bold"} ${fontSize}px ${selectFont}`;
+
+      ctx.fillStyle = "rgba(255,255,255,1";
+      ctx.globalAlpha = 1;
+
+      const x = canvas.width / 2;
+      const y = canvas.height / 2;
+
+      ctx.translate(x, y);
+      ctx.fillText(text, 0, 0);
+      ctx.restore();
+
+      const foreGroundImage = new Image();
+
+      foreGroundImage.onload = () => {
+        ctx.drawImage(foreGroundImage, 0, 0, canvas.width, canvas.height);
+      };
+
+      foreGroundImage.src = processedImgUrl;
     };
 
-    image.src = processedImgUrl;
+    bgImage.src = imageSrc;
   };
 
   return (
