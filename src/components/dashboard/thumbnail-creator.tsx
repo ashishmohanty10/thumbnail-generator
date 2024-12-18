@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dropzone } from "../dropzone";
 import { Style } from "../style";
+import { removeBackground } from "@imgly/background-removal";
 
 export function ThumbnailCreator() {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
   const [loading, setLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+
+  const [processedImgUrl, setProcessedImageUrl] = useState<string | null>(null);
+
+  const [canvasReady, setCanvasReady] = useState(false);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const setSelectedImage = async (file?: File) => {
     if (file) {
@@ -16,10 +23,44 @@ export function ThumbnailCreator() {
       reader.onload = async (e) => {
         const src = e.target?.result as string;
         setImageSrc(src);
+
+        const blob = await removeBackground(src);
+        const processedUrl = URL.createObjectURL(blob);
+
+        setProcessedImageUrl(processedUrl);
+        setCanvasReady(true);
+        setLoading(false);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    if (canvasReady) {
+      drawCompositeImage();
+    }
+  }, [canvasReady]);
+
+  const drawCompositeImage = () => {
+    if (!canvasRef.current || !canvasReady || !imageSrc || !processedImgUrl)
+      return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const image = new Image();
+
+    image.onload = () => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    };
+
+    image.src = processedImgUrl;
+  };
+
   return (
     <>
       {imageSrc ? (
@@ -29,7 +70,10 @@ export function ThumbnailCreator() {
               <div className="h-10 w-10 animate-spin rounded-full border-2 border-dashed border-gray-800"></div>
             </div>
           ) : (
-            <></>
+            <canvas
+              className="max-h-lg h-auto w-full max-w-lg rounded-2xl"
+              ref={canvasRef}
+            ></canvas>
           )}
         </>
       ) : (
@@ -50,7 +94,7 @@ export function ThumbnailCreator() {
               <Style
                 image="https://images.unsplash.com/photo-1732192548772-edf8ce6a4712?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 isSelected={selectedStyle === "style1"}
-                selectStyle={() => {}}
+                selectStyle={() => setSelectedStyle("style1")}
               />
               <Style
                 image="https://images.unsplash.com/photo-1732192548772-edf8ce6a4712?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
