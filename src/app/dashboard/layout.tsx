@@ -17,7 +17,7 @@ export default function DashboardLayout({
     <div lang="en" className={`${GeistSans.className}`}>
       <div>
         <Navbar />
-        {children}
+        <div className="mx-auto max-w-7xl">{children}</div>
       </div>
     </div>
   );

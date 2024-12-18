@@ -7,6 +7,7 @@ import {
 } from "../ui/dropdown-menu";
 import { User2 } from "lucide-react";
 import { Signout } from "../auth/signout";
+import { Credits } from "../credits";
 
 export function UserProfile() {
   return (
@@ -17,6 +18,9 @@ export function UserProfile() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuItem>
+          <Credits />
+        </DropdownMenuItem>
         <DropdownMenuItem>
           <Signout />
         </DropdownMenuItem>

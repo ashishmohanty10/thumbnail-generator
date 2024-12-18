@@ -45,10 +45,10 @@ export function SigninForm() {
     });
 
     if (response?.error) {
-      toast.error("Sign-in error:");
+      toast.error("Sign-in error");
     } else {
       router.push("/dashboard");
-      toast.success("Sign-in successful:");
+      toast.success("Sign-in successful");
     }
   }
 

@@ -1,6 +1,8 @@
 import { signOut } from "~/server/auth";
 import { Button } from "../ui/button";
 import { redirect } from "next/navigation";
+import { toast } from "sonner";
+import { LogOut } from "lucide-react";
 
 export async function Signout() {
   return (
@@ -8,11 +10,13 @@ export async function Signout() {
       action={async () => {
         "use server";
         await signOut();
+        toast.success("Log out successfull!!");
         redirect("/");
       }}
     >
       <Button type="submit" variant="link">
-        Sign Out
+        Log Out
+        <LogOut />
       </Button>
     </form>
   );
