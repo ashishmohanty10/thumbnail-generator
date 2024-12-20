@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Dropzone } from "../dropzone";
 import { Style } from "../style";
 import { removeBackground } from "@imgly/background-removal";
+import { presets } from "~/lib/presets";
 
 export function ThumbnailCreator() {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
@@ -59,24 +60,34 @@ export function ThumbnailCreator() {
 
       ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
+      let preset = presets.style1;
+      switch (selectedStyle) {
+        case "style2":
+          preset = presets.style2;
+          break;
+        case "style3":
+          preset = presets.style3;
+          break;
+      }
+
       ctx.save();
 
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      let fontSize = 2000;
-      let selectFont = "Arial";
+      let fontSize = 100;
+      const selectFont = "Arial";
 
-      ctx.font = `${"bold"} ${fontSize}px ${selectFont}`;
+      ctx.font = `${preset.fontWeight} ${fontSize}px ${selectFont}`;
 
       const textWidth = ctx.measureText(text).width;
       const targetWidth = canvas.width * 0.9;
 
-      fontSize == targetWidth / textWidth;
-      ctx.font = `${"bold"} ${fontSize}px ${selectFont}`;
+      fontSize *= targetWidth / textWidth;
+      ctx.font = `${preset.fontWeight} ${fontSize}px ${selectFont}`;
 
-      ctx.fillStyle = "rgba(255,255,255,1";
-      ctx.globalAlpha = 1;
+      ctx.fillStyle = preset.color;
+      ctx.globalAlpha = preset.opacity;
 
       const x = canvas.width / 2;
       const y = canvas.height / 2;
@@ -144,7 +155,7 @@ export function ThumbnailCreator() {
               />
             </div>
           </div>
-          <Dropzone setSelectedImage={setSelectedImage} />;
+          <Dropzone setSelectedImage={setSelectedImage} />
         </div>
       )}
     </>
