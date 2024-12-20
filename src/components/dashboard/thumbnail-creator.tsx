@@ -6,6 +6,21 @@ import { Style } from "../style";
 import { removeBackground } from "@imgly/background-removal";
 import { presets } from "~/lib/presets";
 import { Button } from "../ui/button";
+import { ChevronLeft, Download, PencilRuler } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Select, SelectItem, SelectTrigger } from "../ui/select";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { SelectContent, SelectValue } from "@radix-ui/react-select";
+
+import { inter, domine, roboto_mono } from "~/lib/fonts";
 
 export function ThumbnailCreator() {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
@@ -13,6 +28,7 @@ export function ThumbnailCreator() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const [text, setText] = useState("POV");
+  const [font, setFont] = useState("arial");
 
   const [processedImgUrl, setProcessedImageUrl] = useState<string | null>(null);
 
@@ -77,7 +93,19 @@ export function ThumbnailCreator() {
       ctx.textBaseline = "middle";
 
       let fontSize = 100;
-      const selectFont = "Arial";
+      let selectFont = "arial";
+
+      switch (font) {
+        case "inter":
+          selectFont = inter.style.fontFamily;
+          break;
+        case "domine":
+          selectFont = domine.style.fontFamily;
+          break;
+        case "roboto_mono":
+          selectFont = roboto_mono.style.fontFamily;
+          break;
+      }
 
       ctx.font = `${preset.fontWeight} ${fontSize}px ${selectFont}`;
 
@@ -127,13 +155,87 @@ export function ThumbnailCreator() {
               <div className="h-10 w-10 animate-spin rounded-full border-2 border-dashed border-gray-800"></div>
             </div>
           ) : (
-            <>
-              <canvas
-                className="max-h-lg h-auto w-full max-w-lg rounded-2xl"
-                ref={canvasRef}
-              ></canvas>
-              <Button onClick={() => handleDownlaod()}>Download</Button>
-            </>
+            <div className="flex w-full flex-col items-center">
+              <Button
+                className="mb-6 flex items-center gap-3 self-end"
+                onClick={() => {
+                  setImageSrc(null);
+                  setProcessedImageUrl(null);
+                  setCanvasReady(false);
+                }}
+              >
+                <ChevronLeft /> <p className="leading-7">Go Back</p>
+              </Button>
+
+              <div className="max-w-4xl items-center justify-between gap-10 xl:flex">
+                <div className="my-4 flex w-full flex-col items-center gap-3">
+                  <canvas
+                    className="max-h-lg h-auto w-full max-w-lg rounded-2xl"
+                    ref={canvasRef}
+                  ></canvas>
+                </div>
+
+                <Card className="w-full shadow-xl">
+                  <CardHeader>
+                    <CardTitle>Edit</CardTitle>
+                    <CardDescription>
+                      Change below settings to edit your upload photo
+                    </CardDescription>
+                  </CardHeader>
+
+                  <CardContent className="space-y-3">
+                    <div className="grid w-full items-center gap-2">
+                      <Label htmlFor="text">Edit text</Label>
+                      <Input
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                      />
+                    </div>
+                    <div className="grid w-full items-center gap-4">
+                      <Label htmlFor="font">Select Font</Label>
+                      <Select
+                        value={font}
+                        onValueChange={(value) => setFont(value)}
+                      >
+                        <SelectTrigger id="font">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          className="w-full bg-white"
+                        >
+                          <SelectItem value="arial">Arial</SelectItem>
+                          <SelectItem value="inter">Inter</SelectItem>
+                          <SelectItem value="domine">Domine</SelectItem>
+                          <SelectItem value="roboto_mono">
+                            Roboto_mono
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="flex flex-wrap justify-between gap-2">
+                    <Button
+                      variant="secondary"
+                      className="w-fit self-end border hover:shadow-lg"
+                      onClick={() => drawCompositeImage()}
+                    >
+                      <PencilRuler />
+                      Update
+                    </Button>
+
+                    <Button
+                      className="w-fit self-end hover:shadow-lg"
+                      onClick={() => handleDownlaod()}
+                    >
+                      <Download />
+                      Download
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            </div>
           )}
         </>
       ) : (
@@ -143,7 +245,7 @@ export function ThumbnailCreator() {
               Hi, there
             </h1>
             <p className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              Want to create thumnail?
+              Want to create thumbnail?
             </p>
 
             <p className="pb-2 pt-4 leading-7 text-muted-foreground">
@@ -152,17 +254,17 @@ export function ThumbnailCreator() {
 
             <div className="flex flex-col items-center justify-between gap-10 md:flex-row md:items-start">
               <Style
-                image="https://images.unsplash.com/photo-1732192548772-edf8ce6a4712?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                image="/preset1.png"
                 isSelected={selectedStyle === "style1"}
                 selectStyle={() => setSelectedStyle("style1")}
               />
               <Style
-                image="https://images.unsplash.com/photo-1732192548772-edf8ce6a4712?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                image="/preset2.png"
                 isSelected={selectedStyle === "style2"}
                 selectStyle={() => setSelectedStyle("style2")}
               />
               <Style
-                image="https://images.unsplash.com/photo-1732192548772-edf8ce6a4712?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                image="/preset3.png"
                 isSelected={selectedStyle === "style3"}
                 selectStyle={() => setSelectedStyle("style3")}
               />

@@ -32,7 +32,7 @@ export function Style({
         src={image}
         width={800}
         height={800}
-        className="max-w-52 rounded-2xl shadow-xl"
+        className="h-36 max-w-52 rounded-2xl shadow-xl"
         alt="randomImg-1"
       />
     </div>
