@@ -6,7 +6,7 @@ import { Credits } from "../credits";
 
 export function Navbar() {
   return (
-    <nav className="mx-auto flex max-w-7xl items-center justify-between border-b py-4">
+    <nav className="mx-auto flex h-[--navigation-height] w-full max-w-7xl items-center justify-between border-b">
       <Button asChild variant="ghost" className="rounded-full" size="icon">
         <Link href="/">
           <Images />

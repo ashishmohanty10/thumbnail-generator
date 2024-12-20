@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { RecentThumbnails } from "~/components/dashboard/recent-thumbnails";
 import { ThumbnailCreator } from "~/components/dashboard/thumbnail-creator";
 import { Button } from "~/components/ui/button";
 import { auth } from "~/server/auth";
@@ -10,7 +11,6 @@ export default async function DashboardPage() {
 
   if (!session?.user) {
     redirect("/signin");
-    return null;
   }
 
   const user = await db.user.findUnique({
@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex h-screen items-center justify-center md:mx-auto md:max-w-4xl">
+    <div className="flex h-[calc(100vh_-_var(--navigation-height))] items-center justify-center md:mx-auto md:max-w-4xl">
       <div className="flex max-w-full flex-col gap-10">
         {user?.credits === 0 ? (
           <div className="flex flex-col space-y-4 px-10">
@@ -45,13 +45,15 @@ export default async function DashboardPage() {
                 <Link href="/dashboard/pricing">Buy Credits</Link>
               </Button>
 
-              <div className="pt-10">
-                <p>Show recent thumbnails</p>
+              <div className="mt-8">
+                <RecentThumbnails />
               </div>
             </div>
           </div>
         ) : (
-          <ThumbnailCreator />
+          <ThumbnailCreator>
+            <RecentThumbnails />
+          </ThumbnailCreator>
         )}
       </div>
     </div>

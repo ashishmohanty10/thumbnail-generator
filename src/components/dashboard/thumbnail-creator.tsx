@@ -22,7 +22,7 @@ import { SelectContent, SelectValue } from "@radix-ui/react-select";
 
 import { inter, domine, roboto_mono } from "~/lib/fonts";
 
-export function ThumbnailCreator() {
+export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
   const [loading, setLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);

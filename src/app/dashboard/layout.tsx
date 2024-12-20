@@ -15,7 +15,7 @@ export default function DashboardLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div lang="en" className={`${GeistSans.className}`}>
-      <div>
+      <div className="flex w-full flex-col">
         <Navbar />
         <div className="mx-auto max-w-7xl">{children}</div>
       </div>
