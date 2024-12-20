@@ -5,6 +5,7 @@ import { Dropzone } from "../dropzone";
 import { Style } from "../style";
 import { removeBackground } from "@imgly/background-removal";
 import { presets } from "~/lib/presets";
+import { Button } from "../ui/button";
 
 export function ThumbnailCreator() {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
@@ -108,6 +109,15 @@ export function ThumbnailCreator() {
     bgImage.src = imageSrc;
   };
 
+  const handleDownlaod = async () => {
+    if (canvasRef.current) {
+      const link = document.createElement("a");
+      link.download = "image.png";
+      link.href = canvasRef.current.toDataURL();
+      link.click();
+    }
+  };
+
   return (
     <>
       {imageSrc ? (
@@ -117,10 +127,13 @@ export function ThumbnailCreator() {
               <div className="h-10 w-10 animate-spin rounded-full border-2 border-dashed border-gray-800"></div>
             </div>
           ) : (
-            <canvas
-              className="max-h-lg h-auto w-full max-w-lg rounded-2xl"
-              ref={canvasRef}
-            ></canvas>
+            <>
+              <canvas
+                className="max-h-lg h-auto w-full max-w-lg rounded-2xl"
+                ref={canvasRef}
+              ></canvas>
+              <Button onClick={() => handleDownlaod()}>Download</Button>
+            </>
           )}
         </>
       ) : (
