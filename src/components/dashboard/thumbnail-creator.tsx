@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Dropzone } from "../dropzone";
 import { Style } from "../style";
-import { removeBackground } from "@imgly/background-removal";
 import { presets } from "~/lib/presets";
 import { Button } from "../ui/button";
 import { ChevronLeft, Download, PencilRuler } from "lucide-react";
@@ -22,7 +21,7 @@ import { SelectContent, SelectValue } from "@radix-ui/react-select";
 
 import { inter, domine, roboto_mono } from "~/lib/fonts";
 
-export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
+export function ThumbnailCreator() {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
   const [loading, setLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -35,6 +34,7 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
   const [canvasReady, setCanvasReady] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const workerRef = useRef<Worker | null>(null);
 
   const setSelectedImage = async (file?: File) => {
     if (file) {
@@ -44,24 +44,13 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
         const src = e.target?.result as string;
         setImageSrc(src);
 
-        const blob = await removeBackground(src);
-        const processedUrl = URL.createObjectURL(blob);
-
-        setProcessedImageUrl(processedUrl);
-        setCanvasReady(true);
-        setLoading(false);
+        workerRef.current?.postMessage(src);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  useEffect(() => {
-    if (canvasReady) {
-      drawCompositeImage();
-    }
-  }, [canvasReady]);
-
-  const drawCompositeImage = () => {
+  const drawCompositeImage = useCallback(() => {
     if (!canvasRef.current || !canvasReady || !imageSrc || !processedImgUrl)
       return;
 
@@ -135,7 +124,13 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
     };
 
     bgImage.src = imageSrc;
-  };
+  }, [canvasReady, font, imageSrc, processedImgUrl, selectedStyle, text]);
+
+  useEffect(() => {
+    if (canvasReady) {
+      drawCompositeImage();
+    }
+  }, [canvasReady, drawCompositeImage]);
 
   const handleDownlaod = async () => {
     if (canvasRef.current) {
@@ -145,6 +140,23 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
       link.click();
     }
   };
+
+  useEffect(() => {
+    workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
+
+    workerRef.current.onmessage = (event) => {
+      const blob = event.data as Blob;
+      const processedUrl = URL.createObjectURL(blob);
+
+      setProcessedImageUrl(processedUrl);
+      setCanvasReady(true);
+      setLoading(false);
+    };
+
+    return () => {
+      workerRef.current?.terminate();
+    };
+  }, []);
 
   return (
     <>
