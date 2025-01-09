@@ -1,19 +1,17 @@
-import { Images } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import { UserProfile } from "./user-profile";
 import { Credits } from "../credits";
+import { ModeToggle } from "../theme-toggle";
 
 export function Navbar() {
   return (
     <nav className="mx-auto flex h-[--navigation-height] w-full max-w-7xl items-center justify-between border-b">
-      <Button asChild variant="ghost" className="rounded-full" size="icon">
-        <Link href="/">
-          <Images />
-        </Link>
-      </Button>
+      <Link href="/" className="text-xl font-bold">
+        ThumbHero
+      </Link>
 
       <div className="flex items-center gap-4">
+        <ModeToggle />
         <div>
           <Credits />
         </div>
