@@ -26,7 +26,7 @@ export const signUpSchema = z.object({
   password: z
     .string({ required_error: "Password is required" })
     .min(1, "Password is required")
-    .min(8, "Password need to be atleasr 8 character")
+    .min(8, "Password need to be atleast 8 character")
     .max(32, "Password must be at most 32 character"),
 });
 

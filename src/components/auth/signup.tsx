@@ -22,7 +22,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
-import { signupAction } from "~/app/actions/authActions";
+import { signupAction } from "~/app/actions/auth-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +39,6 @@ export function SignupForm() {
 
   async function onSubmit(values: signUpSchemaType) {
     try {
-      console.log(values);
       const error = await signupAction(values);
 
       if (error) {

@@ -20,6 +20,7 @@ import { SelectContent, SelectValue } from "@radix-ui/react-select";
 
 import { inter, domine, roboto_mono } from "~/lib/fonts";
 import { useUploadThing } from "~/lib/uploadthing";
+import { uploadFileAction } from "~/app/actions/upload-file-action";
 
 export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
@@ -54,9 +55,7 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
 
   const handleUpload = useCallback(
     async (canvas: HTMLCanvasElement) => {
-      console.log("uploading started here");
       const blob = await new Promise<Blob>((resolve) => {
-        console.log("inside the blob");
         canvas?.toBlob((blob) => {
           if (blob) resolve(blob);
         }, "image/png");
@@ -65,8 +64,8 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       const res = await startUpload([file]);
       if (res?.[0]) {
-        console.log("uploaded");
-        return res[0].url;
+        const image = res[0].url;
+        await uploadFileAction(image);
       }
     },
     [startUpload],
