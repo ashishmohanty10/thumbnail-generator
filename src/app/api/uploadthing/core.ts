@@ -13,7 +13,7 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
   })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       const session = await auth();
       const user = session?.user;
       if (!user) throw Error("No user found");
