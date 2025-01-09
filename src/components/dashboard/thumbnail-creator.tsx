@@ -1,5 +1,4 @@
 "use client";
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dropzone } from "../dropzone";
 import { Style } from "../style";
@@ -20,11 +19,13 @@ import { Input } from "../ui/input";
 import { SelectContent, SelectValue } from "@radix-ui/react-select";
 
 import { inter, domine, roboto_mono } from "~/lib/fonts";
+import { useUploadThing } from "~/lib/uploadthing";
 
-export function ThumbnailCreator() {
+export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
   const [selectedStyle, setSelectedStyle] = useState<string>("style1");
   const [loading, setLoading] = useState<boolean>(false);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const { startUpload } = useUploadThing("imageUploader");
 
   const [text, setText] = useState("POV");
   const [font, setFont] = useState("arial");
@@ -32,6 +33,7 @@ export function ThumbnailCreator() {
   const [processedImgUrl, setProcessedImageUrl] = useState<string | null>(null);
 
   const [canvasReady, setCanvasReady] = useState(false);
+  const [savedFile, setSavedFile] = useState<File | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const workerRef = useRef<Worker | null>(null);
@@ -49,6 +51,26 @@ export function ThumbnailCreator() {
       reader.readAsDataURL(file);
     }
   };
+
+  const handleUpload = useCallback(
+    async (canvas: HTMLCanvasElement) => {
+      console.log("uploading started here");
+      const blob = await new Promise<Blob>((resolve) => {
+        console.log("inside the blob");
+        canvas?.toBlob((blob) => {
+          if (blob) resolve(blob);
+        }, "image/png");
+      });
+
+      const file = new File([blob], "thumbnail.png", { type: "image/png" });
+      const res = await startUpload([file]);
+      if (res?.[0]) {
+        console.log("uploaded");
+        return res[0].url;
+      }
+    },
+    [startUpload],
+  );
 
   const drawCompositeImage = useCallback(() => {
     if (!canvasRef.current || !canvasReady || !imageSrc || !processedImgUrl)
@@ -116,15 +138,24 @@ export function ThumbnailCreator() {
 
       const foreGroundImage = new Image();
 
-      foreGroundImage.onload = () => {
+      foreGroundImage.onload = async () => {
         ctx.drawImage(foreGroundImage, 0, 0, canvas.width, canvas.height);
+        await handleUpload(canvas);
       };
 
       foreGroundImage.src = processedImgUrl;
     };
 
     bgImage.src = imageSrc;
-  }, [canvasReady, font, imageSrc, processedImgUrl, selectedStyle, text]);
+  }, [
+    canvasReady,
+    font,
+    handleUpload,
+    imageSrc,
+    processedImgUrl,
+    selectedStyle,
+    text,
+  ]);
 
   useEffect(() => {
     if (canvasReady) {
@@ -132,7 +163,7 @@ export function ThumbnailCreator() {
     }
   }, [canvasReady, drawCompositeImage]);
 
-  const handleDownlaod = async () => {
+  const handleDownload = async () => {
     if (canvasRef.current) {
       const link = document.createElement("a");
       link.download = "image.png";
@@ -146,6 +177,8 @@ export function ThumbnailCreator() {
 
     workerRef.current.onmessage = (event) => {
       const blob = event.data as Blob;
+      const file = new File([blob], "thumbnail.png", { type: "image/png" });
+      setSavedFile(file);
       const processedUrl = URL.createObjectURL(blob);
 
       setProcessedImageUrl(processedUrl);
@@ -239,7 +272,7 @@ export function ThumbnailCreator() {
 
                     <Button
                       className="w-fit self-end hover:shadow-lg"
-                      onClick={() => handleDownlaod()}
+                      onClick={() => handleDownload()}
                     >
                       <Download />
                       Download
@@ -283,6 +316,7 @@ export function ThumbnailCreator() {
             </div>
           </div>
           <Dropzone setSelectedImage={setSelectedImage} />
+          <div className="mt-8">{children}</div>
         </div>
       )}
     </>

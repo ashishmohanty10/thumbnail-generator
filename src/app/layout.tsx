@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "~/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Thumbnail Generator",
@@ -16,9 +17,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.className}`}>
       <body>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
 
-        <Toaster richColors />
+          <Toaster richColors />
+        </ThemeProvider>
       </body>
     </html>
   );
