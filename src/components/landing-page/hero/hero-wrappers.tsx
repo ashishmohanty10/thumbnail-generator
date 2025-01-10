@@ -26,7 +26,7 @@ export const HeroTitle = ({ children, className }: HeroElementsProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
       className={cn(
-        "mb-4 pt-6 text-center text-6xl font-semibold leading-none tracking-tight",
+        "mb-4 pt-6 text-center text-4xl font-medium leading-none tracking-tight md:text-6xl",
         className,
       )}
     >
@@ -42,7 +42,7 @@ export const HeroSubTitle = ({ children, className }: HeroElementsProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut", delay: 0.8 }}
       className={cn(
-        "py-1 text-center text-lg font-medium text-slate-400",
+        "py-1 text-center text-sm font-medium text-muted-foreground md:text-lg",
         className,
       )}
     >

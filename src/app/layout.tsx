@@ -2,7 +2,7 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
-import { Montserrat_Alternates } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ThemeProvider } from "~/components/theme-provider";
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const monsterrat = Montserrat_Alternates({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
 });
@@ -20,7 +20,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${monsterrat.className}`}>
+    <html lang="en" className={`${inter.className}`}>
       <body>
         <ThemeProvider
           attribute="class"

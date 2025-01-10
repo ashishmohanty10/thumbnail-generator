@@ -58,6 +58,17 @@ const config = {
           "5": "hsl(var(--chart-5))",
         },
       },
+      animation: {
+        "infinite-scroll":
+          "infinite-scroll var(--animation-delay) linear infinite forwards",
+        "fade-in": "fade-in 1000ms var(--animation-delay, 0ms) ease forwards",
+      },
+      keyframes: {
+        "infinite-scroll": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+      },
     },
   },
   plugins: [tailwindAnimate],

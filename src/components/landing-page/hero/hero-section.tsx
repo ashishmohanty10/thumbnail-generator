@@ -1,16 +1,16 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { ContainerWrapper } from "../container-wrapper";
+import { ContainerWrapper } from "../../container-wrapper";
 import { HeroSubTitle, HeroTitle, Highlight } from "./hero-wrappers";
-import { StarIcon } from "../icon/star-icon";
-import { Button } from "../ui/button";
+import { StarIcon } from "../../icon/star-icon";
+import { Button } from "../../ui/button";
 import { HeroImage } from "./hero-image";
 import { motion } from "framer-motion";
 
 export function HeroSection() {
   return (
-    <div className="relative py-32">
+    <div className="relative py-32" id="home">
       <ContainerWrapper className="space-y-5 text-center">
         <div className="item-center group flex w-full justify-center">
           <Highlight className="flex items-center gap-1 text-purple-400 shadow-sm shadow-purple-400 transition-colors group-hover:shadow-md group-hover:shadow-purple-400">
@@ -26,7 +26,7 @@ export function HeroSection() {
         <HeroTitle>
           Create{" "}
           <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text font-serif text-transparent">
-            Captivating <br />
+            Captivating <br className="hidden md:block" />
           </span>
           Thumbnails{" "}
           <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text font-serif text-transparent">
@@ -36,8 +36,8 @@ export function HeroSection() {
 
         <HeroSubTitle className="mb-6">
           Upload your images effortlessly and watch as our app creates stunning
-          thumbnails, placing bold, <br /> eye-catching text behind your
-          characters for maximum visual impact.
+          thumbnails, placing bold, <br className="hidden md:block" />{" "}
+          eye-catching text behind your characters for maximum visual impact.
         </HeroSubTitle>
 
         <motion.div
