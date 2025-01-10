@@ -10,7 +10,7 @@ export function FeatureCard() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.2 }}
-      className="grid grid-cols-1 gap-10 py-5 xl:grid-cols-2"
+      className="grid grid-cols-1 gap-10 py-5 md:grid-cols-2"
     >
       {features.map((item, idx) => (
         <div key={idx} className="">
@@ -34,10 +34,17 @@ export function FeatureCard() {
             >
               {item.description}
             </motion.p>
-            <div className="absolute bottom-0 right-0 h-20 w-20 bg-gradient-to-br from-purple-500 to-orange-200 opacity-80 blur-3xl"></div>
+
+            <BGSecondary />
           </div>
         </div>
       ))}
     </motion.div>
+  );
+}
+
+export function BGSecondary() {
+  return (
+    <div className="absolute bottom-0 right-0 h-20 w-20 bg-gradient-to-br from-purple-500 to-orange-200 opacity-80 blur-3xl"></div>
   );
 }

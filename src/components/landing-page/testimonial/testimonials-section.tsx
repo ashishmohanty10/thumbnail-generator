@@ -7,7 +7,7 @@ export function TestimonialsSection() {
     <div
       id="testimonials"
       style={{ scrollBehavior: "smooth" }}
-      className="py-16"
+      className="py-5"
     >
       <ContainerWrapper className="mb-8">
         <Title>
@@ -22,6 +22,7 @@ export function TestimonialsSection() {
           <br /> characters for maximum visual impact.
         </SubTitle>
       </ContainerWrapper>
+
       <TestimonialCard />
     </div>
   );
