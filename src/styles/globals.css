@@ -63,6 +63,9 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -78,6 +81,25 @@
       font-family: "Instrument+Serif";
       font-style: italic;
       font-weight: 400;
+    }
+
+    .mask-image-custom {
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        black 128px,
+        black calc(100% - 200px),
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        black 128px,
+        black calc(100% - 200px),
+        transparent 100%
+      );
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
     }
   }
 }

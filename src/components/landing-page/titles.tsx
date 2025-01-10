@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
+import { StarIcon } from "../icon/star-icon";
 
 interface ServiceProps {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export const Title = ({ children, className }: ServiceElementsProps) => {
       transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.2 }}
       className={cn(
-        "text-brand mb-4 text-3xl font-bold leading-snug tracking-tight",
+        "text-brand mb-4 text-center text-3xl font-bold leading-snug tracking-tight",
         className,
       )}
     >
@@ -37,7 +38,7 @@ export const SubTitle = ({ children, className }: ServiceElementsProps) => {
       transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
       viewport={{ once: true, amount: 0.2 }}
       className={cn(
-        "text-text text-balance text-lg font-medium text-muted-foreground",
+        "text-text text-balance text-center text-lg font-medium text-muted-foreground",
         className,
       )}
     >
@@ -68,8 +69,9 @@ export const FeatureHighlight = ({
         className,
       )}
     >
+      <StarIcon className="h-4 w-4 text-purple-300" />
       {children}
-      <div className="w-15 bg-brand h-[.5px]"></div>
+      <StarIcon className="h-4 w-4 text-purple-300" />
     </motion.div>
   );
 };

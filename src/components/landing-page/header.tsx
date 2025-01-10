@@ -38,12 +38,12 @@ export function Header() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="fixed left-0 top-0 z-50 w-full backdrop-blur-md"
     >
-      <ContainerWrapper className="flex items-center justify-between border-b py-4">
+      <ContainerWrapper className="flex w-full items-center justify-between border-b px-4 py-4 xl:px-0">
         <Link href="/" className="text-2xl font-semibold">
           Thumb<span className="gradientText font-serif">Hero</span>
         </Link>
 
-        <nav className="flex items-center gap-5">
+        <nav className="hidden items-center gap-5 xl:flex">
           {navLinks.map((links) => (
             <ul
               key={links.id}
@@ -61,7 +61,7 @@ export function Header() {
           <ModeToggle />
           <Button
             size="sm"
-            className="text-sm font-semibold shadow-sm shadow-purple-500 transition-colors"
+            className="hidden text-sm font-semibold shadow-sm shadow-purple-500 transition-colors xl:block"
           >
             <Link href="/signup">SignUp</Link>
           </Button>
