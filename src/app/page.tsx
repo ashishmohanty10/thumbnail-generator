@@ -1,5 +1,6 @@
 import { ContainerWrapper } from "~/components/container-wrapper";
 import { FeatureSection } from "~/components/landing-page/feature/feature-section";
+import { Footer } from "~/components/landing-page/footer/footer-section";
 import { Header } from "~/components/landing-page/header";
 import { HeroSection } from "~/components/landing-page/hero/hero-section";
 import { TestimonialsSection } from "~/components/landing-page/testimonial/testimonials-section";
@@ -14,6 +15,8 @@ export default function HomePage() {
       <HeroSection />
       <FeatureSection />
       <TestimonialsSection />
+
+      <Footer />
     </div>
   );
 }
