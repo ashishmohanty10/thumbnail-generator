@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -63,5 +65,19 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .gradientText {
+    @apply bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent;
+  }
+
+  @layer utilities {
+    .font-serif {
+      font-family: "Instrument+Serif";
+      font-style: italic;
+      font-weight: 400;
+    }
   }
 }

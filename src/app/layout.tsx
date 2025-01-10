@@ -1,8 +1,8 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Toaster } from "sonner";
+import { Montserrat_Alternates } from "next/font/google";
 import { ThemeProvider } from "~/components/theme-provider";
 
 export const metadata: Metadata = {
@@ -11,11 +11,16 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+const monsterrat = Montserrat_Alternates({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.className}`}>
+    <html lang="en" className={`${monsterrat.className}`}>
       <body>
         <ThemeProvider
           attribute="class"
@@ -24,7 +29,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-
           <Toaster richColors />
         </ThemeProvider>
       </body>
