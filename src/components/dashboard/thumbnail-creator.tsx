@@ -142,7 +142,7 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
         await handleUpload(canvas);
       };
 
-      foreGroundImage.src = processedImgUrl;
+      foreGroundImage.src = processedImgUrl; // Ensure this line is included after defining foreGroundImage
     };
 
     bgImage.src = imageSrc;
@@ -172,6 +172,14 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      void (async () => {
+        const onnxruntimeWeb = await import("onnxruntime-web/webgpu");
+
+        console.log(onnxruntimeWeb);
+      })();
+    }
+
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
     workerRef.current.onmessage = (event) => {
@@ -291,11 +299,9 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
             <p className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
               Want to create thumbnail?
             </p>
-
             <p className="pb-2 pt-4 leading-7 text-muted-foreground">
               Use one of these templates below
             </p>
-
             <div className="flex flex-col items-center justify-between gap-10 md:flex-row md:items-start">
               <Style
                 image="/preset1.png"

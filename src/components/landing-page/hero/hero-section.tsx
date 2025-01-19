@@ -7,6 +7,7 @@ import { StarIcon } from "../../icon/star-icon";
 import { Button } from "../../ui/button";
 import { HeroImage } from "./hero-image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -40,17 +41,18 @@ export function HeroSection() {
           eye-catching text behind your characters for maximum visual impact.
         </HeroSubTitle>
 
-        <motion.div
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut", delay: 1 }}
-          className="flex w-full items-center justify-center gap-5"
-        >
-          <Button className="shadow-sm shadow-purple-500 transition-colors">
-            Get Started Now
-          </Button>
-        </motion.div>
-
+        <Link href="/signin">
+          <motion.div
+            initial={{ opacity: 0, y: -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 1 }}
+            className="flex w-full items-center justify-center gap-5"
+          >
+            <Button className="shadow-sm shadow-purple-500 transition-colors">
+              Get Started Now
+            </Button>
+          </motion.div>
+        </Link>
         <HeroImage />
       </ContainerWrapper>
     </div>

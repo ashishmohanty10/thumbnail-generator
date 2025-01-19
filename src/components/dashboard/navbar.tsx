@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { UserProfile } from "./user-profile";
-import { Credits } from "../credits";
+// import { Credits } from "../credits";
 import { ModeToggle } from "../theme-toggle";
 
 export function Navbar() {
@@ -12,9 +12,9 @@ export function Navbar() {
 
       <div className="flex items-center gap-4">
         <ModeToggle />
-        <div>
+        {/* <div>
           <Credits />
-        </div>
+        </div> */}
 
         <UserProfile />
       </div>
