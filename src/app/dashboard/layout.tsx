@@ -17,7 +17,9 @@ export default function DashboardLayout({
     <div lang="en" className={`${GeistSans.className}`}>
       <div className="flex w-full flex-col">
         <Navbar />
-        <div className="mx-auto max-w-7xl">{children}</div>
+        <div className="mx-auto h-screen max-w-7xl px-5 xl:px-0">
+          {children}
+        </div>
       </div>
     </div>
   );

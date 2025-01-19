@@ -23,28 +23,20 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex h-[calc(100vh_-_var(--navigation-height))] items-center justify-center md:mx-auto md:max-w-4xl">
+    <div className="flex items-center justify-center pt-16 md:mx-auto md:max-w-4xl">
       <div className="flex max-w-full flex-col gap-10">
         {user?.credits === 0 ? (
           <div className="flex flex-col space-y-4 px-10">
-            <div>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <div className="w-full">
+              <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight md:text-left lg:text-5xl">
                 Hi, there
               </h1>
               <p className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Want to create thumnail?
+                Want to create thumbnail?
               </p>
             </div>
 
             <div>
-              <p className="pb-2 leading-7 text-muted-foreground">
-                Buy more credits to continue generating thumbnails
-              </p>
-
-              <Button asChild className="w-fit">
-                <Link href="/dashboard/pricing">Buy Credits</Link>
-              </Button>
-
               <div className="mt-8">
                 <RecentThumbnails />
               </div>

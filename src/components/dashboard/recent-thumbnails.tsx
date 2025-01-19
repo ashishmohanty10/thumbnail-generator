@@ -40,12 +40,13 @@ export const RecentThumbnails = async () => {
         Download your most recent thumbnails
       </p>
       <Separator className="my-2" />
-      <div className="flex items-center gap-10">
+
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {images && images.length > 0 ? (
           images.map((item, idx) => (
             <div
               key={idx}
-              className="relative flex flex-col items-center overflow-hidden rounded-xl border py-3"
+              className="relative flex flex-col items-center overflow-hidden rounded-xl border p-2"
             >
               <Image
                 src={item.image}
@@ -53,13 +54,14 @@ export const RecentThumbnails = async () => {
                 width={200}
                 height={200}
                 priority
+                className="h-full w-full"
               />
 
               <Button
                 asChild
                 variant={"ghost"}
                 size={"icon"}
-                className="absolute bottom-5 right-5"
+                className="absolute bottom-5 right-5 z-30"
               >
                 <a
                   href={item.image}
