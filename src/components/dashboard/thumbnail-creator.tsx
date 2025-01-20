@@ -180,23 +180,20 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
 
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
-    workerRef.current.onmessage = async (event) => {
+    workerRef.current.onmessage = (event) => {
       const blob = event.data as Blob;
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
 
-      // Convert Blob to ArrayBuffer
-      const arrayBuffer = await blob.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      // Convert to Base64
-      let binary = "";
-      uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
-      const base64String = "data:image/png;base64," + btoa(binary);
-
-      setProcessedImageUrl(base64String);
-      setCanvasReady(true);
-      setLoading(false);
+      // Convert Blob to Base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProcessedImageUrl(base64String);
+        setCanvasReady(true);
+        setLoading(false);
+      };
+      reader.readAsDataURL(blob);
     };
 
     return () => {
