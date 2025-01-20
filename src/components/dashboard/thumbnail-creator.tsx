@@ -185,9 +185,9 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
       // const processesUrl = URL.createObjectURL(new Blob(event.data as, {type: "application/zip"}))
-      // const processedUrl = URL.createObjectURL(blob);
+      const processedUrl = window.URL.createObjectURL(blob);
 
-      // setProcessedImageUrl(processedUrl);
+      setProcessedImageUrl(processedUrl);
       setCanvasReady(true);
       setLoading(false);
     };
