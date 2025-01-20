@@ -142,7 +142,7 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
         await handleUpload(canvas);
       };
 
-      foreGroundImage.src = processedImgUrl; // Ensure this line is included after defining foreGroundImage
+      foreGroundImage.src = processedImgUrl;
     };
 
     bgImage.src = imageSrc;
@@ -175,8 +175,6 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       void (async () => {
         const onnxruntimeWeb = await import("onnxruntime-web/webgpu");
-
-        console.log(onnxruntimeWeb);
       })();
     }
 
@@ -186,9 +184,10 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
       const blob = event.data as Blob;
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
-      const processedUrl = URL.createObjectURL(blob);
+      // const processesUrl = URL.createObjectURL(new Blob(event.data as, {type: "application/zip"}))
+      // const processedUrl = URL.createObjectURL(blob);
 
-      setProcessedImageUrl(processedUrl);
+      // setProcessedImageUrl(processedUrl);
       setCanvasReady(true);
       setLoading(false);
     };
