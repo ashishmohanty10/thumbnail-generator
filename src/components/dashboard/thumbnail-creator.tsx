@@ -184,15 +184,19 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
     workerRef.current.onmessage = async (event) => {
-      const blob = event.data as Blob;
-      const file = new File([blob], "thumbnail.png", { type: "image/png" });
-      setSavedFile(file);
-
       try {
-        // Upload to Vercel Blob store
+        const blob = event.data as Blob;
+        const file = new File([blob], "thumbnail.png", { type: "image/png" });
+        setSavedFile(file);
 
-        const { url } = await put("thumbnail.png", blob, {
+        // Convert Blob to ArrayBuffer then to Buffer
+        const arrayBuffer = await blob.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        // Upload buffer to Vercel Blob
+        const { url } = await put("thumbnail.png", buffer, {
           access: "public",
+          contentType: "image/png",
         });
 
         setProcessedImageUrl(url);
