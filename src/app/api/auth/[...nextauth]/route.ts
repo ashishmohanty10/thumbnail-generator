@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const response = (await handlers.GET(req)) as Response;
+    const response = await handlers.GET(req);
     return response instanceof Response
       ? response
       : NextResponse.json(response as Record<string, unknown>);
