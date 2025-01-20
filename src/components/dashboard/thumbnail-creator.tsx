@@ -180,14 +180,21 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
 
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
-    workerRef.current.onmessage = (event) => {
+    workerRef.current.onmessage = async (event) => {
       const blob = event.data as Blob;
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
-      // const processesUrl = URL.createObjectURL(new Blob(event.data as, {type: "application/zip"}))
-      const processedUrl = window.URL.createObjectURL(blob);
 
-      setProcessedImageUrl(processedUrl);
+      // Convert Blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+
+      // Convert to Base64
+      let binary = "";
+      uint8Array.forEach((byte) => (binary += String.fromCharCode(byte)));
+      const base64String = "data:image/png;base64," + btoa(binary);
+
+      setProcessedImageUrl(base64String);
       setCanvasReady(true);
       setLoading(false);
     };
