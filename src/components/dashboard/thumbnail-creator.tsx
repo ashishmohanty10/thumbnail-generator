@@ -180,20 +180,27 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
 
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
-    workerRef.current.onmessage = (event) => {
+    workerRef.current.onmessage = async (event) => {
       const blob = event.data as Blob;
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
 
-      // Convert Blob to Base64
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setProcessedImageUrl(base64String);
-        setCanvasReady(true);
-        setLoading(false);
-      };
-      reader.readAsDataURL(blob);
+      try {
+        // Convert to ArrayBuffer first
+        const buffer = await blob.arrayBuffer();
+        const newBlob = new Blob([buffer], { type: "image/png" });
+
+        // Then convert to data URL
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProcessedImageUrl(reader.result as string);
+          setCanvasReady(true);
+          setLoading(false);
+        };
+        reader.readAsDataURL(newBlob);
+      } catch (error) {
+        console.error("Error processing image:", error);
+      }
     };
 
     return () => {
