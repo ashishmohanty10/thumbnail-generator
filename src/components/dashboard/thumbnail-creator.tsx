@@ -17,6 +17,7 @@ import { Select, SelectItem, SelectTrigger } from "../ui/select";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { SelectContent, SelectValue } from "@radix-ui/react-select";
+import { put } from "@vercel/blob";
 
 import { inter, domine, roboto_mono } from "~/lib/fonts";
 import { useUploadThing } from "~/lib/uploadthing";
@@ -182,15 +183,24 @@ export function ThumbnailCreator({ children }: { children: React.ReactNode }) {
 
     workerRef.current = new Worker(new URL("./worker.ts", import.meta.url));
 
-    workerRef.current.onmessage = (event) => {
+    workerRef.current.onmessage = async (event) => {
       const blob = event.data as Blob;
       const file = new File([blob], "thumbnail.png", { type: "image/png" });
       setSavedFile(file);
-      const processedUrl = URL.createObjectURL(blob);
 
-      setProcessedImageUrl(processedUrl);
-      setCanvasReady(true);
-      setLoading(false);
+      try {
+        // Upload to Vercel Blob store
+
+        const { url } = await put("thumbnail.png", blob, {
+          access: "public",
+        });
+
+        setProcessedImageUrl(url);
+        setCanvasReady(true);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error uploading to Vercel Blob:", error);
+      }
     };
 
     return () => {
